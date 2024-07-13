@@ -34,7 +34,7 @@ public class BookServiceImpl implements IBookService {
 
     @Override
     public Page<Book> getBooksByCategoryId(Pageable pageable, Integer categoryId) {
-        return bookRepository.findAllByCategoryId(pageable, categoryId);
+        return bookRepository.findByCategoryIdAndDistinctTitle(pageable, categoryId);
     }
 
     @Override
@@ -56,6 +56,7 @@ public class BookServiceImpl implements IBookService {
     @Transactional(readOnly = true)
     @Override
     public Page<Book> filter(
+            String searchAll,
             String nameAuthor,
             List<Integer> categoryIds,
             String nameBook,
@@ -65,8 +66,7 @@ public class BookServiceImpl implements IBookService {
             categoryIds = null;
         }
 
-        Page<Book> book = bookRepository.filter(pageable,nameBook,nameAuthor,publisherId,categoryIds );
-        System.out.println(book);
+        Page<Book> book = bookRepository.filter(pageable, searchAll, nameBook, nameAuthor, publisherId, categoryIds);
         return book;
     }
 

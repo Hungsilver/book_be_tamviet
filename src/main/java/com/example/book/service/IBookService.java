@@ -18,6 +18,7 @@ public interface IBookService {
 
 
     Page<Book> filter(
+            String seachAll,
             String nameAuthor,
             List<Integer> categoryIds,
             String nameBook,

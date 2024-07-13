@@ -1,14 +1,9 @@
 package com.example.book.controller.rest;
 
 import com.example.book.domain.Book;
-import com.example.book.repository.AuthorRepository;
-import com.example.book.repository.CategoryRepository;
-import com.example.book.repository.PublisherRepository;
 import com.example.book.service.IBookService;
 import com.example.book.service.dto.FilterResDTO;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
-//import org.springdoc.core.annotations.ParameterObject;
 import org.springdoc.api.annotations.ParameterObject;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -36,12 +31,13 @@ public class BookController {
     @GetMapping("/filter")
     private ResponseEntity<FilterResDTO<List<Book>>> filter(
             @ParameterObject Pageable pageable,
+            @RequestParam(value = "searchAll", defaultValue = "", required = false) String searchAll,
             @RequestParam(value = "nameAuthor", defaultValue = "", required = false) String nameAuthor,
             @RequestParam(value = "categoryIds", defaultValue = "", required = false) List<Integer> categoryIds,
             @RequestParam(value = "nameBook", defaultValue = "", required = false) String nameBook,
             @RequestParam(value = "publisherId", defaultValue = "", required = false) Integer publisherId
     ) {
-        Page<Book> book = bookService.filter(nameAuthor, categoryIds, nameBook, publisherId, pageable);
+        Page<Book> book = bookService.filter(searchAll,nameAuthor, categoryIds, nameBook, publisherId, pageable);
         return ResponseEntity.ok(FilterResDTO.<List<Book>>builder()
                 .data(book.getContent())
                 .totalPages(book.getTotalPages())
