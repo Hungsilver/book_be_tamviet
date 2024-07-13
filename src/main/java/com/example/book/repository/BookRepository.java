@@ -22,8 +22,9 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
 
     Page<Book> findAllByPublisherId(Pageable pageable, Integer id);
 
+// fake data select distinct
     @Query("""
-            select distinct b from Book b
+            select  b from Book b
                 left join Category c on c.id = b.category.id
                 left join Publisher  p on p.id = b.publisher.id
                 left join Author a on a.id = b.author.id
@@ -44,12 +45,11 @@ public interface BookRepository extends JpaRepository<Book, Integer> {
                 lower(concat(b.episodesTotal,'') ) like lower(concat('%',:searchAll,'%')) or
                 lower(a.name ) like lower(concat('%',:searchAll,'%')) or
                 lower(c.name ) like lower(concat('%',:searchAll,'%')) or
-                lower(p.name ) like lower(concat('%',:searchAll,'%')) 
-                ) and
-                       (trim(:nameBook)='' or :nameBook is null OR b.title LIKE CONCAT('%', :nameBook, '%')) AND
-                       (trim(:nameAuthor)='' or :nameAuthor is null OR a.name LIKE CONCAT('%', :nameAuthor, '%')) AND
-                       (:publisherId IS NULL OR :publisherId = p.id) AND
-                       (:categoryIds IS NULL OR c.id IN (:categoryIds))
+                lower(p.name ) like lower(concat('%',:searchAll,'%')) ) and
+                (trim(:nameBook)='' or :nameBook is null OR b.title LIKE CONCAT('%', :nameBook, '%')) AND
+                (trim(:nameAuthor)='' or :nameAuthor is null OR a.name LIKE CONCAT('%', :nameAuthor, '%')) AND
+                (:publisherId IS NULL OR :publisherId = p.id) AND
+                (:categoryIds IS NULL OR c.id IN (:categoryIds))
                                     """)
     Page<Book> filter(
             Pageable pageable,

@@ -67,6 +67,7 @@ public class BookServiceImpl implements IBookService {
         }
 
         Page<Book> book = bookRepository.filter(pageable, searchAll, nameBook, nameAuthor, publisherId, categoryIds);
+
         return book;
     }
 
